@@ -181,7 +181,17 @@ class CipherBehavior extends ModelBehavior {
 		        break;
 		    }
 		}
-		return $this->stripInvalidChars($decrypted);
+
+		// Remove trailing padding
+		$decryptedBeforeRemovingPadding = $decrypted;
+		$length = strlen($decrypted);
+    	$padding = ord($decrypted[$length - 1]);
+    	$decrypted = substr($decrypted, 0, -$padding);
+		if (!$decrypted) {
+			$decrypted = $decryptedBeforeRemovingPadding;
+		}
+
+		return $decrypted;
 	}
 
 /**
@@ -213,13 +223,4 @@ class CipherBehavior extends ModelBehavior {
 		return 'cake';
 	}
 
-/**
- * Strip invalid characters from string
- *
- * @param string $str Original string
- * @return string String with invalid characters removed
- */
-	private function stripInvalidChars($str) {
-		return preg_replace('/[^(\x20-\x7F)]*/', '', $str);
-	}
 }
