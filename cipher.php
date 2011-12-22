@@ -2,7 +2,8 @@
 /**
  * Cipher Behavior for encrypting/decrypting fields
  *
- * @package cake
+ * For use with CakePHP 1.3
+ *
  * @author J. Miller j@jmillerdesign.com
  */
 class CipherBehavior extends ModelBehavior {
@@ -11,13 +12,13 @@ class CipherBehavior extends ModelBehavior {
  * Default settings
  *
  * @var array
- *      - fields array Fields to cipher.								DEFAULT: password
+ *      - fields array Fields to cipher.								DEFAULT: none
  *      - autoDecrypt boolean Decrypt ciphered value automatically.		DEFAULT: true
  *      - key string Key to encrypt with.								DEFAULT: Security.salt
  *      - cipher string Cipher method to use. (cake|mcrypt|auto)		DEFAULT: auto
  */
 	var $default = array(
-		'fields' => array('password'),
+		'fields' => array(),
 		'autoDecrypt' => true,
 		'key' => '',
 		'cipher' => 'auto'
