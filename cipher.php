@@ -181,7 +181,7 @@ class CipherBehavior extends ModelBehavior {
 		        break;
 		    }
 		}
-		return $decrypted;
+		return $this->stripInvalidChars($decrypted);
 	}
 
 /**
@@ -211,5 +211,15 @@ class CipherBehavior extends ModelBehavior {
 		}
 
 		return 'cake';
+	}
+
+/**
+ * Strip invalid characters from string
+ *
+ * @param string $str Original string
+ * @return string String with invalid characters removed
+ */
+	private function stripInvalidChars($str) {
+		return preg_replace('/[^(\x20-\x7F)]*/', '', $str);
 	}
 }
