@@ -1,16 +1,21 @@
-# Cipher Behavior for CakePHP 1.3
+# Cipher Behavior for CakePHP
 
 ## Overview
 
-This behavior handles encrypting and decrypting fields, to store information securely in the database. It uses either *mcrypt* or CakePHP's built-in *Security::cipher*.
+This plugin behavior handles encrypting and decrypting fields, to store information securely in the database. It uses either *mcrypt* or CakePHP's built-in *Security::cipher*. This version supports CakePHP 2.1.
 
 ### Installation
 
-1. Save cipher.php into app/models/behaviors/
-2. In the model that has the fields to encrypt, add Cipher to the $actsAs array, along with the settings to use.
+1. Install the plugin as a submodule:
+
+		git submodule add git@github.com:jmillerdesign/Cipher-Behavior-for-CakePHP.git app/Plugin/Cipher
+2. Load the plugin in Config/bootstrap.php
+
+		CakePlugin::load('Cipher');
+3. In the model(s) that has the fields to encrypt, add Cipher.Cipher to the $actsAs array, along with the settings to use.
 
 		var $actsAs = array(
-			'Cipher' => array(
+			'Cipher.Cipher' => array(
 				'fields' => array('password')
 			)
 		);
@@ -22,4 +27,4 @@ This behavior handles encrypting and decrypting fields, to store information sec
 - key (string): Key to encrypt with. Default: Security.salt
 - cipher (string): Cipher method to use (cake OR mcrypt OR auto). Default: auto
 
-[https://github.com/jmillerdesign](https://github.com/jmillerdesign)
+[http://jmillerdesign.github.com/Cipher-Behavior-for-CakePHP/](http://jmillerdesign.github.com/Cipher-Behavior-for-CakePHP/)

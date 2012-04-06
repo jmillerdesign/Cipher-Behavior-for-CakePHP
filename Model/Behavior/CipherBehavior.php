@@ -2,7 +2,7 @@
 /**
  * Cipher Behavior for encrypting/decrypting fields
  *
- * For use with CakePHP 1.3
+ * For use with CakePHP
  *
  * @author J. Miller j@jmillerdesign.com
  */
@@ -49,7 +49,7 @@ class CipherBehavior extends ModelBehavior {
 		if (isset($config['cipher'])) {
 			$this->config[$model->name]['cipher'] = $config['cipher'];
 		}
-		$this->config[$model->name]['cipher'] = $this->_cipherMethod();
+		$this->config[$model->name]['cipher'] = $this->_cipherMethod($model->name);
 
 		// Key
 		if (isset($config['key'])) {
@@ -208,16 +208,17 @@ class CipherBehavior extends ModelBehavior {
 /**
  * Get chosen cipher method
  *
+ * @param string $modelName Name of current model
  * @return string (mcrypt|cake) Chosen cipher method
  */
-	private function _cipherMethod() {
-		if ($this->config[$model->name]['cipher'] == 'auto') {
+	private function _cipherMethod($modelName) {
+		if ($this->config[$modelName]['cipher'] == 'auto') {
 			if (function_exists('mcrypt_module_open')) {
 				return 'mcrypt';
 			}
 		}
 
-		if ($this->config[$model->name]['cipher'] == 'mcrypt') {
+		if ($this->config[$modelName]['cipher'] == 'mcrypt') {
 			return 'mcrypt';
 		}
 
