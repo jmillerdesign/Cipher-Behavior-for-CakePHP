@@ -8,7 +8,7 @@ This plugin behavior handles encrypting and decrypting fields, to store informat
 
 1. Install the plugin as a submodule:
 
-		git submodule add git@github.com:jmillerdesign/Cipher-Behavior-for-CakePHP.git app/Plugin/Cipher
+		git submodule add https://jmillerdesign@github.com/jmillerdesign/Cipher-Behavior-for-CakePHP.git app/Plugin/Cipher
 2. Load the plugin in Config/bootstrap.php
 
 		CakePlugin::load('Cipher');
