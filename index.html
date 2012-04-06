@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Cipher Behavior for CakePHP by jmillerdesign</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/jmillerdesign/Cipher-Behavior-for-CakePHP">Fork Me on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Cipher Behavior for CakePHP</h1>
+            <h2>A wrapper for Security::cipher to automatically encrypt/decrypt specified fields</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/jmillerdesign/Cipher-Behavior-for-CakePHP/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/jmillerdesign/Cipher-Behavior-for-CakePHP/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+      <span class="banner-fix"></span>
+
+      <section id="main_content">
+        <h2>Overview</h2>
+
+<p>This plugin behavior handles encrypting and decrypting fields, to store information securely in the database. It uses either <em>mcrypt</em> or CakePHP's built-in <em>Security::cipher</em>. This version supports CakePHP 2.1.</p>
+
+<h3>Installation</h3>
+
+<ol>
+<li>
+<p>Install the plugin as a submodule:</p>
+
+<pre><code>git submodule add https://jmillerdesign@github.com/jmillerdesign/Cipher-Behavior-for-CakePHP.git app/Plugin/Cipher
+</code></pre>
+</li>
+<li>
+<p>Load the plugin in Config/bootstrap.php</p>
+
+<pre><code>CakePlugin::load('Cipher');
+</code></pre>
+</li>
+<li>
+<p>In the model(s) that has the fields to encrypt, add Cipher.Cipher to the $actsAs array, along with the settings to use.</p>
+
+<pre><code>var $actsAs = array(
+    'Cipher.Cipher' =&gt; array(
+        'fields' =&gt; array('password')
+    )
+);
+</code></pre>
+</li>
+</ol><h3>Settings</h3>
+
+<ul>
+<li>fields (array): Fields to cipher. Default: no fields</li>
+<li>autoDecrypt (boolean): Decrypt ciphered fields automatically. Default: true</li>
+<li>key (string): Key to encrypt with. Default: Security.salt</li>
+<li>cipher (string): Cipher method to use (cake OR mcrypt OR auto). Default: auto</li>
+</ul>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/jmillerdesign">jmillerdesign</a> can be found on <a href="https://github.com/jmillerdesign/Cipher-Behavior-for-CakePHP">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-11374867-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
