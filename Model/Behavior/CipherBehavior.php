@@ -67,7 +67,7 @@ class CipherBehavior extends ModelBehavior {
 
 		// Auto-Decrypt
 		if (isset($config['autoDecrypt'])) {
-			$this->config[$model->name]['autoDecrypt'] = (bool) $config['autoDecrypt'];
+			$this->config[$model->name]['autoDecrypt'] = (boolean) $config['autoDecrypt'];
 		}
 	}
 
