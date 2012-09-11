@@ -19,19 +19,12 @@ class CipherBehavior extends ModelBehavior {
  *      - key string Key to encrypt with.								DEFAULT: Security.salt
  *      - cipher string Cipher method to use. (cake|mcrypt|auto)		DEFAULT: auto
  */
-	var $default = array(
+	var $_defaults = array(
 		'fields' => array(),
 		'autoDecrypt' => true,
 		'key' => '',
 		'cipher' => 'auto'
 	);
-
-/**
- * Config settings. A merge of default settings and specified model settings
- *
- * @var array
- */
-	var $config = array();
 
 /**
  * Behavior initialization
@@ -45,31 +38,31 @@ class CipherBehavior extends ModelBehavior {
 			trigger_error('Security.cipherSeed is invalid', E_USER_ERROR);
 		}
 
-		$this->config[$model->name] = $this->default;
+		$this->settings[$model->name] = $this->_defaults;
 
 		// Cipher method
 		if (isset($config['cipher'])) {
-			$this->config[$model->name]['cipher'] = $config['cipher'];
+			$this->settings[$model->name]['cipher'] = $config['cipher'];
 		}
-		$this->config[$model->name]['cipher'] = $this->_cipherMethod($model->name);
+		$this->settings[$model->name]['cipher'] = $this->_cipherMethod($model->name);
 
 		// Key
 		if (isset($config['key'])) {
-			$this->config[$model->name]['key'] = $config['key'];
-		} else if ($this->config[$model->name]['cipher'] == 'mcrypt') {
-			$this->config[$model->name]['key'] = substr(Configure::read('Security.salt'), 0, 24);
+			$this->settings[$model->name]['key'] = $config['key'];
+		} else if ($this->settings[$model->name]['cipher'] == 'mcrypt') {
+			$this->settings[$model->name]['key'] = substr(Configure::read('Security.salt'), 0, 24);
 		} else {
-			$this->config[$model->name]['key'] = Configure::read('Security.salt');
+			$this->settings[$model->name]['key'] = Configure::read('Security.salt');
 		}
 
 		// Fields
 		if (isset($config['fields'])) {
-			$this->config[$model->name]['fields'] = (array) $config['fields'];
+			$this->settings[$model->name]['fields'] = (array) $config['fields'];
 		}
 
 		// Auto-Decrypt
 		if (isset($config['autoDecrypt'])) {
-			$this->config[$model->name]['autoDecrypt'] = (boolean) $config['autoDecrypt'];
+			$this->settings[$model->name]['autoDecrypt'] = (boolean) $config['autoDecrypt'];
 		}
 	}
 
@@ -80,16 +73,16 @@ class CipherBehavior extends ModelBehavior {
  * @return boolean True to save data
  */
 	function beforeSave(&$model) {
-		if (!isset($this->config[$model->name])) {
+		if (!isset($this->settings[$model->name])) {
 			// This model does not use this behavior
 			return true;
 		}
 
 		// Encrypt each field
-		foreach ($this->config[$model->name]['fields'] as $field) {
+		foreach ($this->settings[$model->name]['fields'] as $field) {
 			if (!empty($model->data[$model->name][$field])) {
 				// Encrypt value
-				$model->data[$model->name][$field] = $this->encrypt($model->data[$model->name][$field], $this->config[$model->name]);
+				$model->data[$model->name][$field] = $this->encrypt($model->data[$model->name][$field], $this->settings[$model->name]);
 			}
 		}
 
@@ -105,12 +98,12 @@ class CipherBehavior extends ModelBehavior {
  * @return mixed Result of the find operation
  */
 	function afterFind(&$model, $results, $primary = false) {
-		if (!$results || !isset($this->config[$model->name]['fields'])) {
+		if (!$results || !isset($this->settings[$model->name]['fields'])) {
 			// No fields to decrypt
 			return $results;
 		}
 
-		if ($primary && $this->config[$model->name]['autoDecrypt']) {
+		if ($primary && $this->settings[$model->name]['autoDecrypt']) {
 			// Process all results
 			foreach ($results as &$result) {
 				if (!isset($result[$model->name])) {
@@ -119,8 +112,8 @@ class CipherBehavior extends ModelBehavior {
 				}
 
 				foreach ($result[$model->name] as $field => &$value) {
-					if (in_array($field, $this->config[$model->name]['fields'])) {
-						$value = $this->decrypt($value, $this->config[$model->name]);
+					if (in_array($field, $this->settings[$model->name]['fields'])) {
+						$value = $this->decrypt($value, $this->settings[$model->name]);
 					}
 				}
 			}
@@ -214,13 +207,13 @@ class CipherBehavior extends ModelBehavior {
  * @return string (mcrypt|cake) Chosen cipher method
  */
 	private function _cipherMethod($modelName) {
-		if ($this->config[$modelName]['cipher'] == 'auto') {
+		if ($this->settings[$modelName]['cipher'] == 'auto') {
 			if (function_exists('mcrypt_module_open')) {
 				return 'mcrypt';
 			}
 		}
 
-		if ($this->config[$modelName]['cipher'] == 'mcrypt') {
+		if ($this->settings[$modelName]['cipher'] == 'mcrypt') {
 			return 'mcrypt';
 		}
 
