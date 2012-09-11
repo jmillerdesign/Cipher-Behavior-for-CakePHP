@@ -1,4 +1,6 @@
 <?php
+App::uses('Security', 'Utility');
+
 /**
  * Cipher Behavior for encrypting/decrypting fields
  *
