@@ -41,13 +41,13 @@ class CipherBehavior extends ModelBehavior {
 		$this->settings[$model->name] = $this->_defaults;
 
 		// Cipher method
-		if (isset($config['cipher'])) {
+		if (array_key_exists('cipher', $config)) {
 			$this->settings[$model->name]['cipher'] = $config['cipher'];
 		}
 		$this->settings[$model->name]['cipher'] = $this->_cipherMethod($model->name);
 
 		// Key
-		if (isset($config['key'])) {
+		if (array_key_exists('key', $config)) {
 			$this->settings[$model->name]['key'] = $config['key'];
 		} else if ($this->settings[$model->name]['cipher'] == 'mcrypt') {
 			$this->settings[$model->name]['key'] = substr(Configure::read('Security.salt'), 0, 24);
@@ -56,12 +56,12 @@ class CipherBehavior extends ModelBehavior {
 		}
 
 		// Fields
-		if (isset($config['fields'])) {
+		if (array_key_exists('fields', $config)) {
 			$this->settings[$model->name]['fields'] = (array) $config['fields'];
 		}
 
 		// Auto-Decrypt
-		if (isset($config['autoDecrypt'])) {
+		if (array_key_exists('autoDecrypt', $config)) {
 			$this->settings[$model->name]['autoDecrypt'] = (boolean) $config['autoDecrypt'];
 		}
 	}
@@ -73,7 +73,7 @@ class CipherBehavior extends ModelBehavior {
  * @return boolean True to save data
  */
 	function beforeSave(&$model) {
-		if (!isset($this->settings[$model->name])) {
+		if (!array_key_exists($model->name, $this->settings)) {
 			// This model does not use this behavior
 			return true;
 		}
@@ -98,7 +98,7 @@ class CipherBehavior extends ModelBehavior {
  * @return mixed Result of the find operation
  */
 	function afterFind(&$model, $results, $primary = false) {
-		if (!$results || !isset($this->settings[$model->name]['fields'])) {
+		if (!$results || !array_key_exists('fields', $this->settings[$model->name])) {
 			// No fields to decrypt
 			return $results;
 		}
@@ -106,7 +106,7 @@ class CipherBehavior extends ModelBehavior {
 		if ($primary && $this->settings[$model->name]['autoDecrypt']) {
 			// Process all results
 			foreach ($results as &$result) {
-				if (!isset($result[$model->name])) {
+				if (!array_key_exists($model->name, $result)) {
 					// Result does not have this model
 					continue;
 				}
