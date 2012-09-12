@@ -38,32 +38,17 @@ class CipherBehavior extends ModelBehavior {
 			trigger_error('Security.cipherSeed is invalid', E_USER_ERROR);
 		}
 
-		$this->settings[$model->name] = $this->_defaults;
+		// Use security salt as default key value
+		// Trim to 24 characters for mcrypt
+		$this->_defaults['key'] = substr(Configure::read('Security.salt'), 0, 24);
 
-		// Cipher method
-		if (array_key_exists('cipher', $config)) {
-			$this->settings[$model->name]['cipher'] = $config['cipher'];
-		}
+		// Merge config settings with defaults
+		$this->settings[$model->name] = array_merge($this->_defaults, $config);
+
+		// Set valid values for config settings
+		$this->settings[$model->name]['fields'] = (array) $this->settings[$model->name]['fields'];
+		$this->settings[$model->name]['autoDecrypt'] = (boolean) $this->settings[$model->name]['autoDecrypt'];
 		$this->settings[$model->name]['cipher'] = $this->_cipherMethod($model->name);
-
-		// Key
-		if (array_key_exists('key', $config)) {
-			$this->settings[$model->name]['key'] = $config['key'];
-		} else if ($this->settings[$model->name]['cipher'] == 'mcrypt') {
-			$this->settings[$model->name]['key'] = substr(Configure::read('Security.salt'), 0, 24);
-		} else {
-			$this->settings[$model->name]['key'] = Configure::read('Security.salt');
-		}
-
-		// Fields
-		if (array_key_exists('fields', $config)) {
-			$this->settings[$model->name]['fields'] = (array) $config['fields'];
-		}
-
-		// Auto-Decrypt
-		if (array_key_exists('autoDecrypt', $config)) {
-			$this->settings[$model->name]['autoDecrypt'] = (boolean) $config['autoDecrypt'];
-		}
 	}
 
 /**
