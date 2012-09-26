@@ -119,21 +119,7 @@ class CipherBehavior extends ModelBehavior {
 			return Security::cipher($value, $settings['key']);
 		}
 
-		$iv = 'fYfhHeDm';	// 8 bit IV
-		$bitCheck = 8;		// bit amount for diff algor.
-
-		$textNum = str_split($value, $bitCheck);
-		$textNum = $bitCheck - strlen($textNum[count($textNum) - 1]);
-
-		for ($i = 0; $i < $textNum; $i++) {
-			$value = $value . chr($textNum);
-		}
-
-		$cipher = mcrypt_module_open(MCRYPT_TRIPLEDES, '', 'cbc', '');
-		mcrypt_generic_init($cipher, $settings['key'], $iv);
-		$decrypted = mcrypt_generic($cipher, $value);
-		mcrypt_generic_deinit($cipher);
-		return base64_encode($decrypted);
+		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($settings['key']), $value, MCRYPT_MODE_CBC, md5(md5($settings['key']))));
 	}
 
 /**
@@ -148,31 +134,7 @@ class CipherBehavior extends ModelBehavior {
 			return Security::cipher($value, $settings['key']);
 		}
 
-		$iv = 'fYfhHeDm';	// 8 bit IV
-		$bitCheck = 8;		// bit amount for diff algor.
-
-		$cipher = mcrypt_module_open(MCRYPT_TRIPLEDES, '', 'cbc', '');
-		mcrypt_generic_init($cipher, $settings['key'], $iv);
-		$decrypted = @mdecrypt_generic($cipher, base64_decode($value));
-		mcrypt_generic_deinit($cipher);
-		$lastChar = substr($decrypted, -1);
-		for ($i = 0; $i < ($bitCheck - 1); $i++) {
-		    if (chr($i) == $lastChar) {
-		        $decrypted = substr($decrypted, 0, strlen($decrypted) - $i);
-		        break;
-		    }
-		}
-
-		// Remove trailing padding
-		$decryptedBeforeRemovingPadding = $decrypted;
-		$length = strlen($decrypted);
-    	$padding = ord($decrypted[$length - 1]);
-    	$decrypted = substr($decrypted, 0, -$padding);
-		if (!$decrypted) {
-			$decrypted = $decryptedBeforeRemovingPadding;
-		}
-
-		return $decrypted;
+		return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($settings['key']), base64_decode($value), MCRYPT_MODE_CBC, md5(md5($settings['key']))), "\0");
 	}
 
 /**
